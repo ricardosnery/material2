@@ -53,6 +53,12 @@
           <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
         </svg>
       </button>
+      <mat-form-field *ngIf="_selectPage" class="mat-paginator-select">
+        <mat-select [aria-label]="_intl.goToPage" placeholder="{{_intl.goToPage}}" [(value)]="actualPage"
+          (selectionChange)="changePage($event.value)">
+          <mat-option *ngFor="let item of getPagesArray(); let i = index;" value="{{i+1}}">{{i+1}}</mat-option>
+        </mat-select>
+      </mat-form-field>
       <button mat-icon-button type="button"
               class="mat-paginator-navigation-next"
               (click)="nextPage()"
