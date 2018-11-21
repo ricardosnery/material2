@@ -144,6 +144,17 @@ export class MatPaginator extends _MatPaginatorBase implements OnInit, OnDestroy
 
   /** Displayed set of page size options. Will be sorted and include current page size. */
   _displayedPageSizeOptions: number[];
+  
+  /** Variable to control the current page of select 'go to page' */
+  actualPage = "1";
+  
+  /**  Whether to show the select "go to page" UI to the user adding [selectPage]="true" on component selector */
+  @Input()
+  get selectPage(): boolean { return this._selectPage; }
+  set selectPage(value: boolean) {
+    this._selectPage = value;
+  }
+  _selectPage = false;
 
   constructor(public _intl: MatPaginatorIntl,
               private _changeDetectorRef: ChangeDetectorRef) {
@@ -167,6 +178,7 @@ export class MatPaginator extends _MatPaginatorBase implements OnInit, OnDestroy
 
     const previousPageIndex = this.pageIndex;
     this.pageIndex++;
+    this.actualPage = (this.pageIndex + 1).toString();
     this._emitPageEvent(previousPageIndex);
   }
 
@@ -176,6 +188,7 @@ export class MatPaginator extends _MatPaginatorBase implements OnInit, OnDestroy
 
     const previousPageIndex = this.pageIndex;
     this.pageIndex--;
+    this.actualPage = (this.pageIndex + 1).toString();
     this._emitPageEvent(previousPageIndex);
   }
 
@@ -186,6 +199,7 @@ export class MatPaginator extends _MatPaginatorBase implements OnInit, OnDestroy
 
     const previousPageIndex = this.pageIndex;
     this.pageIndex = 0;
+    this.actualPage = (this.pageIndex + 1).toString();
     this._emitPageEvent(previousPageIndex);
   }
 
@@ -196,6 +210,7 @@ export class MatPaginator extends _MatPaginatorBase implements OnInit, OnDestroy
 
     const previousPageIndex = this.pageIndex;
     this.pageIndex = this.getNumberOfPages() - 1;
+    this.actualPage = (this.pageIndex + 1).toString();
     this._emitPageEvent(previousPageIndex);
   }
 
@@ -219,6 +234,17 @@ export class MatPaginator extends _MatPaginatorBase implements OnInit, OnDestroy
     return Math.ceil(this.length / this.pageSize);
   }
 
+  /** Return pages in array for select */
+  getPagesArray(): any {
+    return Array(this.getNumberOfPages());
+  }
+
+  /** Change pageIndex when select value on go to page select */
+  changePage(value): void {
+    const previousPageIndex = this.pageIndex;
+    this.pageIndex = (value - 1);
+    this._emitPageEvent(previousPageIndex);
+  }
 
   /**
    * Changes the page size so that the first item displayed on the page will still be
